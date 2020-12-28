@@ -2,6 +2,8 @@
 
 [문제 링크](URL)
 
+### JavaScript
+
 ```javascript
 Code;
 ```
