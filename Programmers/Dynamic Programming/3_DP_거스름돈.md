@@ -1,6 +1,6 @@
 ## 문제 이름
 
-[문제 링크](URL)
+[문제 링크](https://programmers.co.kr/learn/courses/30/lessons/12907)
 
 ### Java
 
