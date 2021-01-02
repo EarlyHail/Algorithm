@@ -92,3 +92,101 @@ function solution(genres, plays) {
         ```
 
 2. 위 2번, 3번 자료구조를 가지고 순회하며 최대 2개씩 play가 많은 순으로 노래의 index를 뽑아내면 답이 나온다.
+
+### Java
+
+```java
+import java.util.*;
+
+class Genre implements Comparable<Genre> {
+    String genre;
+    int play;
+    Genre(String genre, int play){
+        this.genre = genre;
+        this.play = play;
+    }
+    @Override
+    public int compareTo(Genre g){
+        return g.play - this.play;
+    }
+    public String toString(){
+        return "["+this.genre+", "+this.play+"]";
+    }
+}
+
+class Play implements Comparable<Play> {
+    int play;
+    int index;
+    Play(int play, int index){
+        this.play = play;
+        this.index = index;
+    }
+    @Override
+    public int compareTo(Play p){
+        return p.play - this.play;
+    }
+    public String toString(){
+        return "["+this.play+", "+this.index+"]";
+    }
+}
+
+class Solution {
+    public int[] solution(String[] genres, int[] plays) {
+        Map<String, Integer> playOfGenresMap = new HashMap<>();
+        Map<String, LinkedList<Play>> playByGenres = new HashMap<>();
+        for(int i=0; i<genres.length; i++){
+            if(playOfGenresMap.containsKey(genres[i])){
+                playOfGenresMap.put(genres[i], playOfGenresMap.get(genres[i]) + plays[i]);
+
+                LinkedList<Play> playOfGenre = playByGenres.get(genres[i]);
+                playOfGenre.add(new Play(plays[i], i));
+                playByGenres.put(genres[i], playOfGenre);
+            }else{
+                playOfGenresMap.put(genres[i], plays[i]);
+
+                LinkedList<Play> playOfGenre = new LinkedList<>();
+                playOfGenre.add(new Play(plays[i], i));
+                playByGenres.put(genres[i], playOfGenre);
+            }
+        }
+        LinkedList<Genre> playOfGenres = new LinkedList<>();
+        playOfGenresMap.forEach((key, value) -> {
+            playOfGenres.push(new Genre(key, value));
+        });
+        Collections.sort(playOfGenres);
+        playByGenres.forEach((key, value) -> {
+            Collections.sort(value);
+        });
+        List<Integer> answerList = new LinkedList<Integer>();
+        Iterator<Genre> iter = playOfGenres.iterator();
+        while(iter.hasNext()){
+            Genre g = iter.next();
+            LinkedList<Play> playByGenre = playByGenres.get(g.genre);
+
+            int count = 0;
+            for(Play p: playByGenre){
+                if(count >= 2) break;
+                answerList.add(p.index);
+                count++;
+            }
+        }
+        int[] answer = new int[answerList.size()];
+        for(int i=0; i<answer.length; i++){
+            answer[i] = answerList.get(i);
+        }
+        return answer;
+    }
+}
+```
+
+-   소요시간 : 30분
+
+### 접근방법
+
+-   접근 방법은 JavaScript와 동일
+
+-   하지만 자료구조를 표현하기 위해, LinkedList와 HashMap을 사용함
+
+    JavaScript에선 배열로 간단하게 genres, plays 쌍 또는 plays, index 쌍을 표현했지만 Java는 객체를 이용하여 표현
+
+-   Collections를 너무 오랜만에 써서 시간이 많이걸림......
